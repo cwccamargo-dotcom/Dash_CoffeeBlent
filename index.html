@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard — Campanha de Leads WhatsApp · CoffeeBlent</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:     #080b12;
+    --s1:     #0e1219;
+    --s2:     #141920;
+    --border: rgba(255,255,255,0.06);
+    --text:   #e8ecf2;
+    --muted:  #5a6475;
+    --dim:    #3a4150;
+    --green:  #00e5a0;
+    --green2: rgba(0,229,160,0.10);
+    --amber:  #ffb020;
+    --amber2: rgba(255,176,32,0.10);
+    --rose:   #ff4f6d;
+    --rose2:  rgba(255,79,109,0.10);
+    --ice:    #5eb8ff;
+    --ice2:   rgba(94,184,255,0.10);
+    --purple: #a78bfa;
+    --r:      14px;
+    --rsm:    10px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Manrope', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background:
+      radial-gradient(ellipse 70% 55% at 15% -5%, rgba(0,229,160,0.07) 0%, transparent 65%),
+      radial-gradient(ellipse 55% 45% at 90% 95%, rgba(94,184,255,0.06) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 30% at 50% 50%, rgba(167,139,250,0.04) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .page {
+    position: relative;
+    z-index: 1;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 36px 28px 72px;
+  }
+
+  /* ── HEADER ── */
+  .header { margin-bottom: 36px; animation: up .5s ease both; }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--green);
+    background: var(--green2);
+    border: 1px solid rgba(0,229,160,0.2);
+    padding: 4px 12px;
+    border-radius: 100px;
+    margin-bottom: 14px;
+  }
+
+  .eyebrow::before {
+    content: '';
+    width: 5px; height: 5px;
+    background: var(--green);
+    border-radius: 50%;
+    animation: blink 2.2s infinite;
+  }
+
+  .header-row {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  h1 {
+    font-family: 'Manrope', sans-serif;
+    font-size: clamp(20px, 2.8vw, 30px);
+    font-weight: 800;
+    line-height: 1.18;
+    letter-spacing: -0.01em;
+    color: var(--text);
+  }
+
+  .h1-sub {
+    display: block;
+    font-size: clamp(13px, 1.6vw, 16px);
+    font-weight: 400;
+    color: var(--muted);
+    margin-top: 4px;
+    letter-spacing: 0;
+  }
+
+  .date-pill {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    background: var(--s1);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 7px 13px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  /* ── BUDGET BANNER ── */
+  .budget-banner {
+    background: var(--s1);
+    border: 1px solid rgba(255,176,32,0.22);
+    border-radius: var(--r);
+    padding: 20px 24px;
+    margin-bottom: 28px;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 20px;
+    animation: up .5s .08s ease both;
+  }
+
+  @media (max-width: 640px) { .budget-banner { grid-template-columns: 1fr; } }
+
+  .bb-icon { font-size: 26px; }
+
+  .bb-text strong {
+    display: block;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--amber);
+    margin-bottom: 2px;
+  }
+
+  .bb-text p { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+  .bb-bar-col { min-width: 220px; }
+
+  .bb-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11.5px;
+    margin-bottom: 8px;
+  }
+
+  .bb-labels .spent { color: var(--text); font-weight: 600; }
+  .bb-labels .left  { color: var(--green); font-weight: 600; }
+
+  .bb-track {
+    height: 7px;
+    background: rgba(255,255,255,0.07);
+    border-radius: 100px;
+    overflow: hidden;
+  }
+
+  .bb-fill {
+    height: 100%;
+    width: 42.6%;
+    background: linear-gradient(90deg, var(--green), var(--amber));
+    border-radius: 100px;
+    animation: grow 1.2s .6s cubic-bezier(.4,0,.2,1) both;
+  }
+
+  .bb-pct {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    margin-top: 6px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  /* ── KPI GRID ── */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 14px;
+    margin-bottom: 28px;
+  }
+
+  @media (max-width: 900px) { .kpi-grid { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 520px)  { .kpi-grid { grid-template-columns: repeat(2, 1fr); } }
+
+  .kpi {
+    background: var(--s1);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 18px 16px 16px;
+    position: relative;
+    overflow: hidden;
+    transition: transform .2s, border-color .2s;
+    animation: up .5s ease both;
+  }
+
+  .kpi:hover { transform: translateY(-3px); border-color: rgba(255,255,255,0.12); }
+
+  .kpi::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    border-radius: 2px 2px 0 0;
+  }
+
+  .kpi.g::before { background: var(--green); }
+  .kpi.a::before { background: var(--amber); }
+  .kpi.r::before { background: var(--rose); }
+  .kpi.i::before { background: var(--ice); }
+  .kpi.p::before { background: var(--purple); }
+
+  .kpi-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .09em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+
+  .kpi-num {
+    font-family: 'Space Mono', monospace;
+    font-size: clamp(18px, 2vw, 24px);
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .kpi.g .kpi-num { color: var(--green); }
+  .kpi.a .kpi-num { color: var(--amber); }
+  .kpi.r .kpi-num { color: var(--rose); }
+  .kpi.i .kpi-num { color: var(--ice); }
+  .kpi.p .kpi-num { color: var(--purple); }
+
+  .kpi-hint { font-size: 10.5px; color: var(--dim); line-height: 1.4; margin-bottom: 10px; }
+
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 100px;
+  }
+
+  .tag.ok   { background: var(--green2); color: var(--green); }
+  .tag.warn { background: var(--amber2); color: var(--amber); }
+  .tag.bad  { background: var(--rose2);  color: var(--rose); }
+
+  /* ── PANELS ── */
+  .panels {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+
+  @media (max-width: 720px) { .panels { grid-template-columns: 1fr; } }
+
+  .panel {
+    background: var(--s1);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 22px 22px 20px;
+    animation: up .5s .22s ease both;
+  }
+
+  .panel-h {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .panel-h span { font-size: 15px; }
+
+  .chart-box { position: relative; height: 210px; }
+
+  /* ── METRIC ROWS ── */
+  .mrow {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .mrow:last-child { border-bottom: none; }
+
+  .mrow-label { font-size: 12px; color: var(--muted); width: 120px; flex-shrink: 0; }
+
+  .mrow-track {
+    flex: 1;
+    height: 4px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 100px;
+    overflow: hidden;
+  }
+
+  .mrow-fill { height: 100%; border-radius: 100px; animation: grow 1s ease both; }
+
+  .mrow-val {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    min-width: 68px;
+    text-align: right;
+  }
+
+  /* ── INSIGHTS ── */
+  .insights {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 13px;
+    margin-bottom: 36px;
+    animation: up .5s .3s ease both;
+  }
+
+  .ins {
+    background: var(--s1);
+    border: 1px solid var(--border);
+    border-radius: var(--rsm);
+    padding: 16px 18px;
+    display: flex;
+    gap: 13px;
+    align-items: flex-start;
+    transition: transform .2s;
+  }
+
+  .ins:hover { transform: translateY(-2px); }
+
+  .ins.ok   { border-color: rgba(0,229,160,0.15);  background: linear-gradient(135deg, var(--s1), rgba(0,229,160,0.03)); }
+  .ins.warn { border-color: rgba(255,176,32,0.15);  background: linear-gradient(135deg, var(--s1), rgba(255,176,32,0.03)); }
+  .ins.info { border-color: rgba(94,184,255,0.15);  background: linear-gradient(135deg, var(--s1), rgba(94,184,255,0.03)); }
+
+  .ins-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+
+  .ins-body strong { display: block; font-size: 12.5px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+  .ins-body p { font-size: 11.5px; color: var(--muted); line-height: 1.55; }
+
+  /* ── FOOTER ── */
+  .footer {
+    text-align: center;
+    font-size: 11.5px;
+    color: var(--dim);
+    padding-top: 22px;
+    border-top: 1px solid var(--border);
+  }
+
+  .footer strong { color: var(--muted); }
+
+  /* ── ANIMATIONS ── */
+  @keyframes up {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: none; }
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: .3; }
+  }
+
+  @keyframes grow {
+    from { width: 0 !important; }
+  }
+
+  .kpi:nth-child(1) { animation-delay: .08s; }
+  .kpi:nth-child(2) { animation-delay: .13s; }
+  .kpi:nth-child(3) { animation-delay: .18s; }
+  .kpi:nth-child(4) { animation-delay: .23s; }
+  .kpi:nth-child(5) { animation-delay: .28s; }
+  .kpi:nth-child(6) { animation-delay: .33s; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="eyebrow">Campanha ativa</div>
+    <div class="header-row">
+      <div>
+        <h1>Performance · Leads WhatsApp
+          <span class="h1-sub">CoffeeBlent — Campanha de Pesquisa</span>
+        </h1>
+      </div>
+      <div class="date-pill">📅 Atualizado em 24/04/2026</div>
+    </div>
+  </div>
+
+  <!-- BUDGET BANNER -->
+  <div class="budget-banner">
+    <div class="bb-icon">💰</div>
+    <div class="bb-text">
+      <strong>Orçamento saudável</strong>
+      <p><strong style="color:var(--green)">R$ 201,08</strong> disponíveis — campanha com bom fôlego para continuar convertendo.</p>
+    </div>
+    <div class="bb-bar-col">
+      <div class="bb-labels">
+        <span class="spent">Gasto: R$ 148,93</span>
+        <span class="left">Restante: R$ 201,08</span>
+      </div>
+      <div class="bb-track">
+        <div class="bb-fill"></div>
+      </div>
+      <div class="bb-pct">
+        <span>42,6% utilizado</span>
+        <span>Total: R$ 350,01</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- KPI CARDS -->
+  <div class="kpi-grid">
+
+    <div class="kpi g">
+      <div class="kpi-label">Conversões</div>
+      <div class="kpi-num">9</div>
+      <div class="kpi-hint">Leads gerados</div>
+      <span class="tag ok">↑ Crescendo</span>
+    </div>
+
+    <div class="kpi g">
+      <div class="kpi-label">Taxa de Conv.</div>
+      <div class="kpi-num">16,67%</div>
+      <div class="kpi-hint">Cliques → Leads</div>
+      <span class="tag ok">↑ Muito alta</span>
+    </div>
+
+    <div class="kpi g">
+      <div class="kpi-label">CTR</div>
+      <div class="kpi-num">9,15%</div>
+      <div class="kpi-hint">Impressões → Cliques</div>
+      <span class="tag ok">↑ Excepcional</span>
+    </div>
+
+    <div class="kpi g">
+      <div class="kpi-label">Custo / Lead</div>
+      <div class="kpi-num">R$16,55</div>
+      <div class="kpi-hint">Custo por conversão</div>
+      <span class="tag ok">↑ Muito eficiente</span>
+    </div>
+
+    <div class="kpi a">
+      <div class="kpi-label">Custo Total</div>
+      <div class="kpi-num">R$148,93</div>
+      <div class="kpi-hint">42,6% do orçamento</div>
+      <span class="tag warn">⚡ Monitorar</span>
+    </div>
+
+    <div class="kpi i">
+      <div class="kpi-label">Saldo</div>
+      <div class="kpi-num">R$201,08</div>
+      <div class="kpi-hint">Disponível agora</div>
+      <span class="tag ok">✓ Saudável</span>
+    </div>
+
+  </div>
+
+  <!-- PANELS -->
+  <div class="panels">
+
+    <div class="panel">
+      <div class="panel-h"><span>📊</span>Funil de Conversão</div>
+      <div class="chart-box">
+        <canvas id="funnelChart"></canvas>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-h"><span>📈</span>Indicadores de Desempenho</div>
+
+      <div class="mrow">
+        <span class="mrow-label">Impressões</span>
+        <div class="mrow-track"><div class="mrow-fill" style="width:100%;background:var(--purple)"></div></div>
+        <span class="mrow-val" style="color:var(--purple)">590</span>
+      </div>
+
+      <div class="mrow">
+        <span class="mrow-label">Cliques</span>
+        <div class="mrow-track"><div class="mrow-fill" style="width:9.15%;background:var(--ice)"></div></div>
+        <span class="mrow-val" style="color:var(--ice)">54</span>
+      </div>
+
+      <div class="mrow">
+        <span class="mrow-label">Conversões</span>
+        <div class="mrow-track"><div class="mrow-fill" style="width:16.67%;background:var(--green)"></div></div>
+        <span class="mrow-val" style="color:var(--green)">9</span>
+      </div>
+
+      <div class="mrow">
+        <span class="mrow-label">CPC Médio</span>
+        <div class="mrow-track"><div class="mrow-fill" style="width:28%;background:var(--amber)"></div></div>
+        <span class="mrow-val" style="color:var(--amber)">R$2,76</span>
+      </div>
+
+      <div class="mrow">
+        <span class="mrow-label">Topo de página</span>
+        <div class="mrow-track"><div class="mrow-fill" style="width:91.51%;background:var(--green)"></div></div>
+        <span class="mrow-val" style="color:var(--green)">91,51%</span>
+      </div>
+
+      <div class="mrow">
+        <span class="mrow-label">1ª Posição</span>
+        <div class="mrow-track"><div class="mrow-fill" style="width:36.53%;background:var(--ice)"></div></div>
+        <span class="mrow-val" style="color:var(--ice)">36,53%</span>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- INSIGHTS -->
+  <div class="insights">
+
+    <div class="ins ok">
+      <div class="ins-icon">🏆</div>
+      <div class="ins-body">
+        <strong>CTR excepcional</strong>
+        <p>9,15% é mais de 4× acima da média do mercado (~2%). Criativo e segmentação altamente alinhados com o público.</p>
+      </div>
+    </div>
+
+    <div class="ins ok">
+      <div class="ins-icon">🎯</div>
+      <div class="ins-body">
+        <strong>Taxa de conversão elevada</strong>
+        <p>16,67% de conversão indica que os leads chegam qualificados e engajados — muito acima dos 2–5% do mercado.</p>
+      </div>
+    </div>
+
+    <div class="ins ok">
+      <div class="ins-icon">💚</div>
+      <div class="ins-body">
+        <strong>CPC e CAC muito baixos</strong>
+        <p>R$2,76 por clique e R$16,55 por lead são números excelentes para o segmento — campanha com ótimo retorno.</p>
+      </div>
+    </div>
+
+    <div class="ins ok">
+      <div class="ins-icon">👑</div>
+      <div class="ins-body">
+        <strong>Dominância no topo da página</strong>
+        <p>91,51% das impressões no topo da página — máxima visibilidade e autoridade de marca perante o público-alvo.</p>
+      </div>
+    </div>
+
+    <div class="ins info">
+      <div class="ins-icon">💰</div>
+      <div class="ins-body">
+        <strong>Orçamento saudável</strong>
+        <p>Com 57,4% do orçamento ainda disponível (R$201,08), a campanha tem fôlego para continuar gerando leads.</p>
+      </div>
+    </div>
+
+    <div class="ins info">
+      <div class="ins-icon">💡</div>
+      <div class="ins-body">
+        <strong>Oportunidade de escala</strong>
+        <p>Métricas excepcionais indicam que aumentar o investimento pode multiplicar leads mantendo o CAC baixo.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <p>Dashboard gerado para <strong>Campanha de Leads WhatsApp · CoffeeBlent</strong> &nbsp;·&nbsp; Dados: Impulso Leads &nbsp;·&nbsp; Valores em BRL</p>
+  </div>
+
+</div>
+
+<script>
+  const ctx = document.getElementById('funnelChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['Impressões', 'Cliques', 'Conversões'],
+      datasets: [{
+        data: [590, 54, 9],
+        backgroundColor: ['rgba(167,139,250,0.65)', 'rgba(94,184,255,0.65)', 'rgba(0,229,160,0.65)'],
+        borderColor:     ['rgba(167,139,250,1)',    'rgba(94,184,255,1)',    'rgba(0,229,160,1)'],
+        borderWidth: 1.5,
+        borderRadius: 8,
+        borderSkipped: false,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#141920',
+          borderColor: 'rgba(255,255,255,0.08)',
+          borderWidth: 1,
+          titleColor: '#e8ecf2',
+          bodyColor: '#5a6475',
+          padding: 12,
+          callbacks: {
+            label: c => ' ' + c.parsed.y.toLocaleString('pt-BR')
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { color: 'rgba(255,255,255,0.04)' },
+          ticks: { color: '#5a6475', font: { family: 'Manrope', size: 12 } },
+          border: { color: 'transparent' }
+        },
+        y: {
+          grid: { color: 'rgba(255,255,255,0.04)' },
+          ticks: {
+            color: '#5a6475',
+            font: { family: 'Space Mono', size: 10 },
+            callback: v => v >= 1000 ? (v/1000).toFixed(1)+'k' : v
+          },
+          border: { color: 'transparent' }
+        }
+      },
+      animation: { duration: 1100, easing: 'easeOutQuart' }
+    }
+  });
+</script>
+</body>
+</html>
