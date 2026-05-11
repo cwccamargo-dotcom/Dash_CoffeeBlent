@@ -126,7 +126,7 @@
   /* ── BUDGET BANNER ── */
   .budget-banner {
     background: var(--s1);
-    border: 1px solid rgba(255,176,32,0.22);
+    border: 1px solid rgba(255,79,109,0.30);
     border-radius: var(--r);
     padding: 20px 24px;
     margin-bottom: 28px;
@@ -145,7 +145,7 @@
     display: block;
     font-size: 13px;
     font-weight: 700;
-    color: var(--amber);
+    color: var(--rose);
     margin-bottom: 2px;
   }
 
@@ -161,7 +161,7 @@
   }
 
   .bb-labels .spent { color: var(--text); font-weight: 600; }
-  .bb-labels .left  { color: var(--green); font-weight: 600; }
+  .bb-labels .left  { color: var(--rose); font-weight: 600; }
 
   .bb-track {
     height: 7px;
@@ -172,8 +172,8 @@
 
   .bb-fill {
     height: 100%;
-    width: 42.6%;
-    background: linear-gradient(90deg, var(--green), var(--amber));
+    width: 93.5%;
+    background: linear-gradient(90deg, var(--amber), var(--rose));
     border-radius: 100px;
     animation: grow 1.2s .6s cubic-bezier(.4,0,.2,1) both;
   }
@@ -353,6 +353,7 @@
 
   .ins.ok   { border-color: rgba(0,229,160,0.15);  background: linear-gradient(135deg, var(--s1), rgba(0,229,160,0.03)); }
   .ins.warn { border-color: rgba(255,176,32,0.15);  background: linear-gradient(135deg, var(--s1), rgba(255,176,32,0.03)); }
+  .ins.bad  { border-color: rgba(255,79,109,0.18);  background: linear-gradient(135deg, var(--s1), rgba(255,79,109,0.04)); }
   .ins.info { border-color: rgba(94,184,255,0.15);  background: linear-gradient(135deg, var(--s1), rgba(94,184,255,0.03)); }
 
   .ins-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
@@ -406,28 +407,28 @@
           <span class="h1-sub">CoffeeBlent — Campanha de Pesquisa</span>
         </h1>
       </div>
-      <div class="date-pill">📅 Atualizado em 24/04/2026</div>
+      <div class="date-pill">📅 Atualizado em 11/05/2026</div>
     </div>
   </div>
 
   <!-- BUDGET BANNER -->
   <div class="budget-banner">
-    <div class="bb-icon">💰</div>
+    <div class="bb-icon">⚠️</div>
     <div class="bb-text">
-      <strong>Orçamento saudável</strong>
-      <p><strong style="color:var(--green)">R$ 201,08</strong> disponíveis — campanha com bom fôlego para continuar convertendo.</p>
+      <strong>Orçamento crítico</strong>
+      <p><strong style="color:var(--rose)">R$ 22,98</strong> disponíveis — apenas 6,5% do orçamento restante. Considere reabastecer para manter a campanha ativa.</p>
     </div>
     <div class="bb-bar-col">
       <div class="bb-labels">
-        <span class="spent">Gasto: R$ 148,93</span>
-        <span class="left">Restante: R$ 201,08</span>
+        <span class="spent">Gasto: R$ 330,39</span>
+        <span class="left" style="color:var(--rose)">Restante: R$ 22,98</span>
       </div>
       <div class="bb-track">
         <div class="bb-fill"></div>
       </div>
       <div class="bb-pct">
-        <span>42,6% utilizado</span>
-        <span>Total: R$ 350,01</span>
+        <span>93,5% utilizado</span>
+        <span>Total: R$ 353,37</span>
       </div>
     </div>
   </div>
@@ -437,44 +438,44 @@
 
     <div class="kpi g">
       <div class="kpi-label">Conversões</div>
-      <div class="kpi-num">9</div>
+      <div class="kpi-num">11</div>
       <div class="kpi-hint">Leads gerados</div>
       <span class="tag ok">↑ Crescendo</span>
     </div>
 
-    <div class="kpi g">
+    <div class="kpi a">
       <div class="kpi-label">Taxa de Conv.</div>
-      <div class="kpi-num">16,67%</div>
+      <div class="kpi-num">10,09%</div>
       <div class="kpi-hint">Cliques → Leads</div>
-      <span class="tag ok">↑ Muito alta</span>
+      <span class="tag warn">↓ Queda vs anterior</span>
     </div>
 
     <div class="kpi g">
       <div class="kpi-label">CTR</div>
-      <div class="kpi-num">9,15%</div>
+      <div class="kpi-num">8,57%</div>
       <div class="kpi-hint">Impressões → Cliques</div>
       <span class="tag ok">↑ Excepcional</span>
     </div>
 
-    <div class="kpi g">
+    <div class="kpi a">
       <div class="kpi-label">Custo / Lead</div>
-      <div class="kpi-num">R$16,55</div>
+      <div class="kpi-num">R$30,04</div>
       <div class="kpi-hint">Custo por conversão</div>
-      <span class="tag ok">↑ Muito eficiente</span>
+      <span class="tag warn">↑ Aumentou</span>
     </div>
 
     <div class="kpi a">
       <div class="kpi-label">Custo Total</div>
-      <div class="kpi-num">R$148,93</div>
-      <div class="kpi-hint">42,6% do orçamento</div>
+      <div class="kpi-num">R$330,39</div>
+      <div class="kpi-hint">93,5% do orçamento</div>
       <span class="tag warn">⚡ Monitorar</span>
     </div>
 
-    <div class="kpi i">
+    <div class="kpi r">
       <div class="kpi-label">Saldo</div>
-      <div class="kpi-num">R$201,08</div>
+      <div class="kpi-num">R$22,98</div>
       <div class="kpi-hint">Disponível agora</div>
-      <span class="tag ok">✓ Saudável</span>
+      <span class="tag bad">⚠ Crítico</span>
     </div>
 
   </div>
@@ -495,37 +496,37 @@
       <div class="mrow">
         <span class="mrow-label">Impressões</span>
         <div class="mrow-track"><div class="mrow-fill" style="width:100%;background:var(--purple)"></div></div>
-        <span class="mrow-val" style="color:var(--purple)">590</span>
+        <span class="mrow-val" style="color:var(--purple)">1.272</span>
       </div>
 
       <div class="mrow">
         <span class="mrow-label">Cliques</span>
-        <div class="mrow-track"><div class="mrow-fill" style="width:9.15%;background:var(--ice)"></div></div>
-        <span class="mrow-val" style="color:var(--ice)">54</span>
+        <div class="mrow-track"><div class="mrow-fill" style="width:8.57%;background:var(--ice)"></div></div>
+        <span class="mrow-val" style="color:var(--ice)">109</span>
       </div>
 
       <div class="mrow">
         <span class="mrow-label">Conversões</span>
-        <div class="mrow-track"><div class="mrow-fill" style="width:16.67%;background:var(--green)"></div></div>
-        <span class="mrow-val" style="color:var(--green)">9</span>
+        <div class="mrow-track"><div class="mrow-fill" style="width:10.09%;background:var(--green)"></div></div>
+        <span class="mrow-val" style="color:var(--green)">11</span>
       </div>
 
       <div class="mrow">
         <span class="mrow-label">CPC Médio</span>
-        <div class="mrow-track"><div class="mrow-fill" style="width:28%;background:var(--amber)"></div></div>
-        <span class="mrow-val" style="color:var(--amber)">R$2,76</span>
+        <div class="mrow-track"><div class="mrow-fill" style="width:30.3%;background:var(--amber)"></div></div>
+        <span class="mrow-val" style="color:var(--amber)">R$3,03</span>
       </div>
 
       <div class="mrow">
         <span class="mrow-label">Topo de página</span>
-        <div class="mrow-track"><div class="mrow-fill" style="width:91.51%;background:var(--green)"></div></div>
-        <span class="mrow-val" style="color:var(--green)">91,51%</span>
+        <div class="mrow-track"><div class="mrow-fill" style="width:89.71%;background:var(--green)"></div></div>
+        <span class="mrow-val" style="color:var(--green)">89,71%</span>
       </div>
 
       <div class="mrow">
         <span class="mrow-label">1ª Posição</span>
-        <div class="mrow-track"><div class="mrow-fill" style="width:36.53%;background:var(--ice)"></div></div>
-        <span class="mrow-val" style="color:var(--ice)">36,53%</span>
+        <div class="mrow-track"><div class="mrow-fill" style="width:39.80%;background:var(--ice)"></div></div>
+        <span class="mrow-val" style="color:var(--ice)">39,80%</span>
       </div>
 
     </div>
@@ -539,7 +540,7 @@
       <div class="ins-icon">🏆</div>
       <div class="ins-body">
         <strong>CTR excepcional</strong>
-        <p>9,15% é mais de 4× acima da média do mercado (~2%). Criativo e segmentação altamente alinhados com o público.</p>
+        <p>8,57% é mais de 4× acima da média do mercado (~2%). Criativo e segmentação altamente alinhados com o público.</p>
       </div>
     </div>
 
@@ -547,15 +548,15 @@
       <div class="ins-icon">🎯</div>
       <div class="ins-body">
         <strong>Taxa de conversão elevada</strong>
-        <p>16,67% de conversão indica que os leads chegam qualificados e engajados — muito acima dos 2–5% do mercado.</p>
+        <p>10,09% de conversão indica leads qualificados — ainda bem acima dos 2–5% do mercado, apesar da queda em relação ao período anterior.</p>
       </div>
     </div>
 
-    <div class="ins ok">
-      <div class="ins-icon">💚</div>
+    <div class="ins warn">
+      <div class="ins-icon">📉</div>
       <div class="ins-body">
-        <strong>CPC e CAC muito baixos</strong>
-        <p>R$2,76 por clique e R$16,55 por lead são números excelentes para o segmento — campanha com ótimo retorno.</p>
+        <strong>Custo por lead aumentou</strong>
+        <p>O CAC subiu de R$16,55 para R$30,04 — ainda aceitável, mas vale investigar quais palavras-chave ou criativos puxaram esse custo.</p>
       </div>
     </div>
 
@@ -563,23 +564,23 @@
       <div class="ins-icon">👑</div>
       <div class="ins-body">
         <strong>Dominância no topo da página</strong>
-        <p>91,51% das impressões no topo da página — máxima visibilidade e autoridade de marca perante o público-alvo.</p>
+        <p>89,71% das impressões no topo da página — máxima visibilidade e autoridade de marca perante o público-alvo.</p>
       </div>
     </div>
 
-    <div class="ins info">
-      <div class="ins-icon">💰</div>
+    <div class="ins bad">
+      <div class="ins-icon">🚨</div>
       <div class="ins-body">
-        <strong>Orçamento saudável</strong>
-        <p>Com 57,4% do orçamento ainda disponível (R$201,08), a campanha tem fôlego para continuar gerando leads.</p>
+        <strong>Orçamento crítico</strong>
+        <p>Apenas R$22,98 restantes (6,5% do total). A campanha pode pausar em breve — recomenda-se reabastecer o orçamento imediatamente para não perder tração.</p>
       </div>
     </div>
 
     <div class="ins info">
       <div class="ins-icon">💡</div>
       <div class="ins-body">
-        <strong>Oportunidade de escala</strong>
-        <p>Métricas excepcionais indicam que aumentar o investimento pode multiplicar leads mantendo o CAC baixo.</p>
+        <strong>Escala com cautela</strong>
+        <p>Antes de aumentar investimento, otimize o CAC de volta para próximo de R$16,55 ajustando lances e segmentação, depois escale.</p>
       </div>
     </div>
 
@@ -599,7 +600,7 @@
     data: {
       labels: ['Impressões', 'Cliques', 'Conversões'],
       datasets: [{
-        data: [590, 54, 9],
+        data: [1272, 109, 11],
         backgroundColor: ['rgba(167,139,250,0.65)', 'rgba(94,184,255,0.65)', 'rgba(0,229,160,0.65)'],
         borderColor:     ['rgba(167,139,250,1)',    'rgba(94,184,255,1)',    'rgba(0,229,160,1)'],
         borderWidth: 1.5,
